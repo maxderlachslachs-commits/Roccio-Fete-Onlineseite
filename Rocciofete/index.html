@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Rocco Fete</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#1b1b1b;
+    color:white;
+    margin:0;
+}
+
+header{
+    text-align:center;
+    padding:30px;
+}
+
+button{
+    padding:10px 20px;
+    margin:10px;
+    font-size:16px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.box{
+    background:#2a2a2a;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.star{
+    animation:spin 3s linear infinite;
+    display:inline-block;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+td,th{
+    padding:10px;
+    border-bottom:1px solid #444;
+}
+
+.lang{
+display:none;
+}
+
+.dice{
+font-size:80px;
+}
+
+</style>
+
+<script>
+
+/* Sprache */
+
+function setLanguage(lang){
+
+document.getElementById("de").style.display="none"
+document.getElementById("dk").style.display="none"
+
+document.getElementById(lang).style.display="block"
+
+}
+
+/* Würfel */
+
+function rollDice(){
+
+let dice=document.getElementById("dice")
+
+let count=0
+
+let interval=setInterval(()=>{
+
+dice.textContent=Math.floor(Math.random()*6)+1
+
+count++
+
+if(count>15){
+clearInterval(interval)
+}
+
+},100)
+
+}
+
+/* Score speichern */
+
+function addScore(){
+
+let name=document.getElementById("name").value
+let stars=document.getElementById("stars").value
+
+if(name=="") return
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+scores.push({name:name,stars:stars})
+
+localStorage.setItem("scores",JSON.stringify(scores))
+
+showScores()
+
+}
+
+/* Scores anzeigen */
+
+function showScores(){
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+let table=""
+
+scores.forEach(s=>{
+
+table+=`<tr>
+<td>${s.name}</td>
+<td>${s.stars}</td>
+</tr>`
+
+})
+
+document.getElementById("scoreTable").innerHTML=table
+
+}
+
+window.onload=function(){
+
+setLanguage("de")
+showScores()
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🎮 ROCCO FETE</h1>
+
+⭐ <span class="star">⭐</span> ⭐
+
+<br>
+
+<button onclick="setLanguage('de')">Deutsch</button>
+<button onclick="setLanguage('dk')">Dansk</button>
+
+</header>
+
+
+<div class="container">
+
+<!-- Würfel -->
+
+<div class="box" style="text-align:center">
+
+<div id="dice" class="dice">🎲</div>
+
+<button onclick="rollDice()">Würfeln</button>
+
+</div>
+
+
+<!-- Anleitung Deutsch -->
+
+<div id="de" class="lang box">
+
+<h2>Anleitung</h2>
+
+<p>Ziel ist es die meisten Sterne ⭐ zu sammeln.</p>
+
+<ul>
+<li>2-6 Spieler</li>
+<li>Würfeln und bewegen</li>
+<li>Feldaktion ausführen</li>
+<li>Bei 10 Sternen gewinnt man</li>
+</ul>
+
+</div>
+
+
+<!-- Anleitung Dansk -->
+
+<div id="dk" class="lang box">
+
+<h2>Spilmanual</h2>
+
+<p>Målet er at samle flest stjerner ⭐</p>
+
+<ul>
+<li>2-6 spillere</li>
+<li>Slå terningen</li>
+<li>Flyt brikken</li>
+<li>10 stjerner vinder</li>
+</ul>
+
+</div>
+
+
+<!-- Scoreboard -->
+
+<div class="box">
+
+<h2>Scoreboard ⭐</h2>
+
+<input id="name" placeholder="Name">
+<input id="stars" type="number" placeholder="Sterne">
+
+<button onclick="addScore()">Speichern</button>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Sterne</th>
+</tr>
+
+<tbody id="scoreTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

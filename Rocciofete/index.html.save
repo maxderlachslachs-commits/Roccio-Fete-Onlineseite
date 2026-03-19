@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>ROCCO FETE</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#1c1c1c;
+color:white;
+margin:0;
+}
+
+header{
+background:#111;
+text-align:center;
+padding:25px;
+}
+
+nav{
+background:#222;
+text-align:center;
+padding:10px;
+}
+
+nav button{
+padding:10px 20px;
+margin:5px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+.box{
+background:#2b2b2b;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.star{
+animation:spin 4s linear infinite;
+display:inline-block;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+.section{
+display:none;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #444;
+}
+
+.dice{
+font-size:80px;
+text-align:center;
+}
+
+</style>
+
+<script>
+
+function show(id){
+
+document.querySelectorAll(".section").forEach(s=>{
+s.style.display="none"
+})
+
+document.getElementById(id).style.display="block"
+
+}
+
+/* Würfel */
+
+function rollDice(){
+
+let dice=document.getElementById("dice")
+
+let count=0
+
+let interval=setInterval(()=>{
+
+dice.textContent=Math.floor(Math.random()*6)+1
+
+count++
+
+if(count>15) clearInterval(interval)
+
+},100)
+
+}
+
+/* Scoreboard */
+
+function addScore(){
+
+let name=document.getElementById("name").value
+let stars=document.getElementById("stars").value
+let coins=document.getElementById("coins").value
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+scores.push({name,stars,coins})
+
+localStorage.setItem("scores",JSON.stringify(scores))
+
+showScores()
+
+}
+
+function showScores(){
+
+let scores=JSON.parse(localStorage.getItem("scores")||"[]")
+
+let html=""
+
+scores.forEach(s=>{
+html+=`<tr>
+<td>${s.name}</td>
+<td>${s.stars}</td>
+<td>${s.coins}</td>
+</tr>`
+})
+
+document.getElementById("scores").innerHTML=html
+
+}
+
+window.onload=function(){
+
+show("guide")
+showScores()
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🎮 ROCCO FETE</h1>
+
+⭐ <span class="star">⭐</span> ⭐
+
+<p>Standard: 4 Spieler</p>
+
+</header>
+
+<nav>
+
+<button onclick="show('guide')">Anleitung</button>
+<button onclick="show('rules')">Regeln</button>
+<button onclick="show('shop')">Shop</button>
+<button onclick="show('minigames')">Minigames</button>
+<button onclick="show('score')">Scoreboard</button>
+<button onclick="show('diceSection')">Würfel</button>
+
+</nav>
+
+<div class="container">
+
+<!-- Anleitung -->
+
+<div id="guide" class="section box">
+
+<h2>Spielanleitung</h2>
+
+<h3>Ziel</h3>
+
+<p>
+Ziel des Spiels ist es, die meisten Sterne ⭐ zu besitzen.
+</p>
+
+<p>
+Das Spiel endet sofort wenn ein Spieler 10 Sterne erreicht.
+</p>
+
+<h3>Spieler</h3>
+
+<ul>
+<li>Standard: 4 Spieler</li>
+<li>2-6 Spieler möglich</li>
+<li>Alter: 8+</li>
+</ul>
+
+<h3>Runden</h3>
+
+<ul>
+<li>4 Spieler → 6 Runden</li>
+</ul>
+
+<h3>Start</h3>
+
+<ul>
+<li>Alle Spieler starten auf dem Startfeld</li>
+<li>Jeder Spieler bekommt 5 Münzen</li>
+<li>Alle starten mit 0 Sternen</li>
+</ul>
+
+</div>
+
+<!-- Regeln -->
+
+<div id="rules" class="section box">
+
+<h2>Felder</h2>
+
+<ul>
+
+<li>🟤 Braun → nichts passiert</li>
+<li>🔵 Blau → +2 Münzen</li>
+<li>🔴 Rot → −1 Münze</li>
+
+<li>🟢 Grün → Chaos:</li>
+
+<ul>
+<li>1-2 → Plätze tauschen</li>
+<li>3-4 → alle anderen +1 Feld</li>
+<li>5 → extra Zug</li>
+<li>6 → nichts</li>
+</ul>
+
+<li>🟡 Gelb → Minigame</li>
+<li>🟣 Lila → Eventkarte</li>
+<li>🟠 Orange → Shop</li>
+
+</ul>
+
+</div>
+
+<!-- Shop -->
+
+<div id="shop" class="section box">
+
+<h2>Shop Aktionen</h2>
+
+<ul>
+
+<li>1 → +1 Feld bewegen (1 Münze)</li>
+
+<li>2 → Schutz vor rotem Feld (1 Münze)</li>
+
+<li>3 → 2 Münzen stehlen (2 Münzen)</li>
+
+<li>4 → Platz tauschen (3 Münzen)</li>
+
+<li>5 → nochmal würfeln (2 Münzen)</li>
+
+<li>6 → wählen:</li>
+
+<ul>
+
+<li>⭐ Stern stehlen (10 Münzen)</li>
+<li>Bowser kaufen (5 Münzen)</li>
+
+</ul>
+
+</ul>
+
+</div>
+
+<!-- Minigames -->
+
+<div id="minigames" class="section box">
+
+<h2>Minigames</h2>
+
+<p>Der Spieler auf dem Minigamefeld ist Spielleiter.</p>
+
+<p>Belohnung: Gewinner bekommt 5 Münzen.</p>
+
+<h3>Minispiele</h3>
+
+<ul>
+
+<li>Terningekonge</li>
+<li>Letzter der sich bewegt</li>
+<li>Kein Lachen</li>
+<li>Schnelle Farbe</li>
+<li>Stein Schere Papier Royale</li>
+<li>Zahlenverbot</li>
+<li>Spiegel</li>
+<li>Würfel auf Kante</li>
+<li>Geräusch raten</li>
+<li>Freeze</li>
+<li>Schnellste Hand</li>
+<li>Augenkontakt</li>
+<li>Zahl raten</li>
+<li>Klatsch Pause</li>
+<li>Schnelle Rechnung</li>
+<li>Letzter der blinkt</li>
+<li>Kein Ja oder Nein</li>
+<li>Tisch nicht bewegen</li>
+<li>Schnelle Reihenfolge</li>
+<li>Würfel hinter Rücken</li>
+
+</ul>
+
+</div>
+
+<!-- Scoreboard -->
+
+<div id="score" class="section box">
+
+<h2>Scoreboard</h2>
+
+<input id="name" placeholder="Spielername">
+<input id="stars" type="number" placeholder="Sterne">
+<input id="coins" type="number" placeholder="Münzen">
+
+<button onclick="addScore()">Speichern</button>
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Sterne</th>
+<th>Münzen</th>
+</tr>
+
+<tbody id="scores"></tbody>
+
+</table>
+
+</div>
+
+<!-- Würfel -->
+
+<div id="diceSection" class="section box">
+
+<h2>Würfel 🎲</h2>
+
+<div id="dice" class="dice">🎲</div>
+
+<button onclick="rollDice()">Würfeln</button>
+
+</div>
+
+</div>
+
+</body>
+</html>
